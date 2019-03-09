@@ -6,12 +6,21 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+//dhia module
 var meetingsRouter =require('./routes/meetings')
+var discussionRouter = require('./routes/discussion')
+var messageRouter = require('./routes/message')
+var evaluationTechRouter=require('./routes/evaluatuin_tech')
+var examRouter = require('./routes/exams')
+var questionRouter =require('./routes/question')
+var reponseRouter =require('./routes/reponse')
+
+
 var backlogSprintRouter =require('./routes/backlog_sprint')
 var backlogProjectRouter =require('./routes/backlog_project')
 var sprintPlanningRouter = require('./routes/sprint_planning')
 var scrum_tableRouter=require('./routes/scrum_table')
-var evaluationTechRouter=require('./routes/evaluatuin_tech')
+
 var evaluationHRRouter=require('./routes/evalution_RH')
 var cvManagmentRouter=require('./routes/cv_managment')
 
@@ -52,6 +61,9 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/user', usersList);
 app.use('/project', projectRouter);
+
+app.use('/meetings', meetingsRouter);
+
 
 
 

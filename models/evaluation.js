@@ -5,7 +5,7 @@ var userschema = mongoose.Schema({
     title:String,
     date:Date,
     note:float,
-    exam:exam,
+    exam:examen,
     discussion:discussion,
     sender:user,
 })
