@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+bcrypt   = require('bcrypt-nodejs');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -23,6 +24,7 @@ var scrum_tableRouter=require('./routes/scrum_table')
 
 var evaluationHRRouter=require('./routes/evalution_RH')
 var cvManagmentRouter=require('./routes/cv_managment')
+
 
 
 
@@ -63,6 +65,8 @@ app.use('/user', usersList);
 app.use('/project', projectRouter);
 
 app.use('/meetings', meetingsRouter);
+
+
 
 
 
