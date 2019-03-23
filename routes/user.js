@@ -41,7 +41,7 @@ router.post('/login', (req,res)=> {
 });
 
 router.post('/register',function(req,res){
-     u  = new user({
+     u  = new user ({
         firstname : req.body.firstname,
         lastname : req.body.lastname,
         password : bcrypt.hashSync(req.body.password,bcrypt.genSaltSync(10)),
