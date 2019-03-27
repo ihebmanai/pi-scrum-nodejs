@@ -1,13 +1,13 @@
-var mongoose = require('mongoose')
+var express = require('express');
+var router = express.Router();
+var mongoose = require('mongoose');
+var project = require('../models/project');
+var Schema=mongoose.Schema;
 var userschema = mongoose.Schema({
     name:String,
     type:{enum:['JAVA','NODEJS']},
     delai:Date,
-    project:project
-
-
-
-
+    project:{type:Schema.Types.ObjectId,ref:'project'}
 
 
 })

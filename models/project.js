@@ -1,8 +1,12 @@
 var mongoose=require('mongoose');
 var User=require('./user');
+var release=require('./releases');
 var Schema=mongoose.Schema;
 var userSchema = mongoose.Schema({
     projectName:{
+        type:String
+    },
+    key:{
         type:String
     },
     startingDate:{
@@ -18,7 +22,8 @@ var userSchema = mongoose.Schema({
     scrumMaster:{type:Schema.Types.ObjectId,ref:'User'},
     devTeam:[
         {type:Schema.Types.ObjectId,ref:'User'}
-    ]
+    ],
+    releases:[release]
 });
 
 var Project=mongoose.model('Project',userSchema,"project");

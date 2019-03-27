@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
 var backlog_projet=require('./backlog_projet')
+var Schema=mongoose.Schema;
 var userschema = mongoose.Schema({
 userStory:String,
 priority:Number,

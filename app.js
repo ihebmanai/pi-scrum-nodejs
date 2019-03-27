@@ -15,7 +15,7 @@ var evaluationTechRouter=require('./routes/evaluatuin_tech')
 var examRouter = require('./routes/exams')
 var questionRouter =require('./routes/question')
 var reponseRouter =require('./routes/reponse')
-
+var releaseRouter =require('./routes/release')
 
 var backlogSprintRouter =require('./routes/backlog_sprint')
 var backlogProjectRouter =require('./routes/backlog_project')
@@ -63,6 +63,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/user', usersList);
 app.use('/project', projectRouter);
+app.use('/backlogProject', backlogProjectRouter);
+app.use('/release', releaseRouter);
 
 app.use('/meetings', meetingsRouter);
 
