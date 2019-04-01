@@ -2,7 +2,7 @@ var mongoose=require('mongoose');
 var User=require('./user');
 var release=require('./releases');
 var Schema=mongoose.Schema;
-var userSchema = mongoose.Schema({
+var projectSchema = mongoose.Schema({
     projectName:{
         type:String
     },
@@ -18,6 +18,10 @@ var userSchema = mongoose.Schema({
     description:{
         type:String
     },
+    status:
+    {   type:String,
+        enum:['not started','in progress','done','not done']},
+
     productOwner:{type:Schema.Types.ObjectId,ref:'User'},
     scrumMaster:{type:Schema.Types.ObjectId,ref:'User'},
     devTeam:[
@@ -26,5 +30,5 @@ var userSchema = mongoose.Schema({
     releases:[release]
 });
 
-var Project=mongoose.model('Project',userSchema,"project");
+var Project=mongoose.model('Project',projectSchema,"project");
 module.exports=Project;

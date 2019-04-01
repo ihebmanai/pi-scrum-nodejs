@@ -24,6 +24,7 @@ var scrum_tableRouter=require('./routes/scrum_table')
 
 var evaluationHRRouter=require('./routes/evalution_RH')
 var cvManagmentRouter=require('./routes/cv_managment')
+var issueRouter=require('./routes/issue')
 
 
 
@@ -65,7 +66,7 @@ app.use('/user', usersList);
 app.use('/project', projectRouter);
 app.use('/backlogProject', backlogProjectRouter);
 app.use('/release', releaseRouter);
-
+app.use('/issue', issueRouter);
 app.use('/meetings', meetingsRouter);
 
 

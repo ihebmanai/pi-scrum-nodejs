@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 var sprint = require('./sprint')
 var userschema = mongoose.Schema({
-    type:String,
+    title:String,
     date:Date,
     contenu:String,
     users:user[any],

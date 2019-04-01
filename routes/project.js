@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var json2xls = require('json2xls')
 var project = require('../models/project');
 var release = require('../models/releases');
 var backlog_projet=require('../models/backlog_projet')
@@ -8,9 +9,45 @@ var user=require('../models/user');
 var port=3001;
 var  path = require('path');
 var async=require("async")
+const Nexmo = require('nexmo');
+var app = express()
+
+
+const nexmo = new Nexmo({
+    apiKey: "9e005905",
+    apiSecret: "rbSgmwmSxqu4Nh9o"
+  });
+  var jsonArr = [{
+    "foo": 'bar',
+    "qux": 'moo',
+    "poo": 123,
+    "stux": new Date()
+},
+{
+    "foo": 'bar',
+    "qux": 'moo',
+    "poo": 345,
+    "stux": new Date()
+}];
+
+app.use(json2xls.middleware);
+var fs = require('fs');
+router.get('/toExcel',function(req, res) {
+    console.log("aaaaaa")
+var file = fs.createWriteStream('file.csv', {'flags': 'w', autoClose: true});
+var result = '';
+for (var hashkey in jsonArr) {
+    console.log("aaaaaa")
+    result += hashkey + ';' + jsonArr[hashkey].foo + ';' + jsonArr[hashkey].qux + '\n';
+    console.log(result)
+}
+    result += hashkey + ';' + jsonArr[hashkey].foo + ';' + jsonArr[hashkey].qux + '\n';
+file.write(result); 
+res.status(200).json("ok")
+});
+app.listen(port)
 var nodeMailer = require('nodemailer');
     var bodyParser = require('body-parser');
-
     var app = express();
     app.set('view engine', 'ejs');
     app.use(express.static('public'));
@@ -78,14 +115,15 @@ router.get("/:id",(req,res)=>{
         })
     })
     //add project
-router.post('/add', (req,res)=> {
+router.post('/add/:idP', (req,res)=> {
     p  = new project ({
         projectName : req.body.projectName,
         description : req.body.description,
         startingDate : req.body.startingDate,
         endDate : req.body.endDate,
+        status:req.body.status,
         description : req.body.description,
-        productOwner : req.params.productOwner,
+        productOwner : req.params.idP,
         scrumMaster: req.body.scrumMaster,
         releases:req.body.releases
     });
@@ -94,9 +132,23 @@ router.post('/add', (req,res)=> {
         res.status(401).json('plz verify scrum master infos')
         return
     }
-    else{res.send(p)
+    else{
+        var tel='';
+        console.log("scrummm"+p.scrumMaster)
+        user.findById(p.scrumMaster, (err, u) => {
+            if(err)
+            console.log(err)
+            tel=u.telephone
+        console.log("teeel"+tel)
+           nexmo.message.sendSms(
+           '21627749998',tel,'A new project has been added on SCRUM Manager Platform and you are the scrum master.', {type: 'unicode'},
+            (err, responseData) => {if (responseData) {console.log(responseData)}}
+          )
+        })
+        res.status(201).json(p)
         p.save()
-        let transporter = nodeMailer.createTransport({
+
+        let transporter = nodeMailer.createTransport({ 
             host: 'smtp.gmail.com',
             port: 465,
             secure: true,
