@@ -29,5 +29,5 @@ var issueSchema = mongoose.Schema({
     }
 });
 
-var Issue=mongoose.model('Issue',issueSchema,"issue");
+var Issue=mongoose.model('issue',issueSchema,"issue");
 module.exports=Issue;

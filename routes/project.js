@@ -6,11 +6,12 @@ var project = require('../models/project');
 var release = require('../models/releases');
 var backlog_projet=require('../models/backlog_projet')
 var user=require('../models/user');
-var port=3001;
+var port2=3001;
 var  path = require('path');
 var async=require("async")
-const Nexmo = require('nexmo');
+const Nexmo = require('nexmo')
 var app = express()
+var Request = require("request")
 
 
 const nexmo = new Nexmo({
@@ -45,7 +46,7 @@ for (var hashkey in jsonArr) {
 file.write(result); 
 res.status(200).json("ok")
 });
-app.listen(port)
+app.listen(port2)
 var nodeMailer = require('nodemailer');
     var bodyParser = require('body-parser');
     var app = express();
@@ -141,13 +142,27 @@ router.post('/add/:idP', (req,res)=> {
             tel=u.telephone
         console.log("teeel"+tel)
            nexmo.message.sendSms(
-           '21627749998',tel,'A new project has been added on SCRUM Manager Platform and you are the scrum master.', {type: 'unicode'},
+           '21627749998',tel,'new project.', {type: 'unicode'},
             (err, responseData) => {if (responseData) {console.log(responseData)}}
           )
         })
         res.status(201).json(p)
         p.save()
-
+        Request.post({
+            "headers": { "content-type": "application/json" },
+            "url": "http://localhost:3000/notification/add/"+p.productOwner,
+            "body": JSON.stringify({
+                "title":"new notification",
+                "content":"this is a new notif from add project",
+                "date": "2019-08-30",
+                "to":["5c7fc059cf7f4c364c9a306e"]
+            })
+        }, (error, response, body) => {
+            if(error) {
+                return console.dir(error);
+            }
+            console.dir(JSON.parse(body));
+        });
         let transporter = nodeMailer.createTransport({ 
             host: 'smtp.gmail.com',
             port: 465,
@@ -171,9 +186,7 @@ router.post('/add/:idP', (req,res)=> {
             }
             });
         
-            app.listen(port, function(){
-              console.log('Server is running at port: ',port);
-            });
+
         
     }
    

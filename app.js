@@ -25,6 +25,8 @@ var scrum_tableRouter=require('./routes/scrum_table')
 var evaluationHRRouter=require('./routes/evalution_RH')
 var cvManagmentRouter=require('./routes/cv_managment')
 var issueRouter=require('./routes/issue')
+var userstoryProjRouter=require('./routes/userStory_backlogP')
+var notificationRouter=require('./routes/notification')
 
 
 
@@ -68,6 +70,8 @@ app.use('/backlogProject', backlogProjectRouter);
 app.use('/release', releaseRouter);
 app.use('/issue', issueRouter);
 app.use('/meetings', meetingsRouter);
+app.use('/userStoryP', userstoryProjRouter);
+app.use('/notification', notificationRouter);
 
 
 

@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var project=require('../models/project')
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 var backlog_projet = require('../models/backlog_projet');
+var project_userstories=require('../models/project_userstories')
 
 router.get("/getProject/:id",(req,res)=>{
     backlog_projet.findById(req.params.id, (err, backlog_projet ) => {
@@ -38,6 +39,17 @@ router.post('/addBacklog/:project', (req,res)=> {
         return
     }
     else{
+        
+        (b.userstories).forEach(element => {
+            u =new project_userstories({
+                userStory: element.userStory,
+                priority: element.priority,
+                timeestimation:element.timeestimation,
+                backlog_projet:b.id
+            })
+            console.log("uuu"+u+"iiid"+b.id)
+            u.save()
+        });
         res.send(b)
         b.save()
     }

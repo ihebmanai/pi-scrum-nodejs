@@ -3,15 +3,15 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var project = require('../models/project');
 var backlog_projet=require('../models/backlog_projet')
-var MyModel = mongoose.model('issue');
+var MyModel = require('../models/issue')
 // Will just hang until mongoose successfully connects
-router.get("/",(req, res) => {
+router.get("/count",(req, res) => {
     MyModel.collection.count({}, function(error, numOfDocs){
-        if(error) return callback(error);
-
-        callback(null, numOfDocs);
+        if(error)  console.log(error);
+        console.log("couuunt"+numOfDocs)
+        
     });
-    console.log(numOfDocs)
+   
 })
 
 module.exports = router;
