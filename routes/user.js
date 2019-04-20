@@ -3,8 +3,21 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var user = require('../models/user');
 var jwt = require('jsonwebtoken')
-
-
+const cors = require('cors')
+var app = express()
+app.use(function(req, res, next) {
+    console.log('options');
+    res.header("Access-Control-Allow-Origin", "*");
+    next(); 
+  });
+router.get("/",(req, res) => {
+    user.find({}, (err, users) => {
+        if(!users)
+        res.status(404).json('no projects found')
+        res.header("Access-Control-Allow-Origin", "*");
+        res.status(200).json(users)
+    })  
+})
 router.post('/login', (req,res)=> {
     
   //  user.insertMany({firstName:"ddddd"});

@@ -100,8 +100,8 @@ router.post('/add/:idP', (req,res)=> {
         projectName : req.body.projectName,
         description : req.body.description,
         key:req.body.key,
-      /*  startingDate : req.body.startingDate,
-        endDate : req.body.endDate, */
+        startingDate : req.body.startingDate,
+        endDate : req.body.endDate, 
         status:req.body.status,
         productOwner : req.params.idP,
         scrumMaster: req.body.scrumMaster,
@@ -128,6 +128,7 @@ router.post('/add/:idP', (req,res)=> {
           )
         })
         console.log(p)
+        res.header("Access-Control-Allow-Methods", "POST");
         res.header('Access-Control-Allow-Origin','*')
         res.status(201).json(p)
         p.save()
