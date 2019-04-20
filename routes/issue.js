@@ -4,6 +4,31 @@ var mongoose = require('mongoose');
 var project = require('../models/project');
 var backlog_projet=require('../models/backlog_projet')
 var issue = require('../models/issue')
+var json2xls = require('json2xls')
+const cors = require('cors');
+var app = express()
+app.use(cors());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
+var nodeMailer = require('nodemailer');
+    var bodyParser = require('body-parser');
+    var app = express();
+    app.set('view engine', 'ejs');
+    app.use(express.static('public'));
+    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(bodyParser.json());
+
+var result2 = '';
+app.use(json2xls.middleware);
+var fs = require('fs');
+router.get('/toExcel',function(req, res) {
+ 
+res.status(200).json("ok")
+});
 //********get number not solved issue by project*****
 
   /* ******* not solved project ****** 
@@ -54,10 +79,19 @@ router.get("/avgSolvedTime",(req, res) => {
               ]
         ],function(err, result) {
             /* divide the result by 1000 *60 *60 *24 */
-            res.json(result);
+          
+
+console.log("aaaaaa")
+var file = fs.createWriteStream('file.csv', {'flags': 'w+', autoClose: true});
+
+for (var hashkey in result) {
+    result2 += "Average solving time " + result[hashkey].avgSolvedTime + '\n';
+    console.log(result2)
+}
+file.write(result2);
+
+res.json(result);
 })
-
-
 })
     /*****************Get % of solved/not solved issues created on specific date**** */
 router.get("/date",(req, res) => {
@@ -66,14 +100,36 @@ router.get("/date",(req, res) => {
    if (req.query.status=="solved" )
     s="solved"
 
-   if (req.query.createdDate){
-        issue.countDocuments({createdDate:{'$gte':req.query.createdDate},status:s},(error, numOfDocs)=>{    
+   if (req.query.createdDate&&req.query.status){
+        issue.countDocuments({createdDate:{'$eq':req.query.createdDate},status:s},(error, numOfDocs)=>{    
             if(error)  
                 console.log(error)
-                issue.countDocuments({createdDate:{'$gte':req.query.createdDate}},(error, allIssues)=>{    
+                issue.countDocuments({createdDate:{'$eq':req.query.createdDate}},(error, allIssues)=>{    
                     if(error)  
                         console.log(error)
-                        res.json(numOfDocs*100/allIssues)
+                        var file = fs.createWriteStream('file.csv', {'flags': 'w+', autoClose: true});
+                                result2 += "Created issues number at " + new Date()+" "+(numOfDocs*100/allIssues) + '\n';
+                                console.log(result2)
+                            file.write(result2);
+                            res.header('Access-Control-Allow-Origin', '*')
+                        res.json(numOfDocs)
+                }) 
+   
+          }) 
+    } 
+    else if (req.query.createdDate&&req.query.status==undefined){
+        issue.countDocuments({createdDate:{'$eq':req.query.createdDate}},(error, numOfDocs)=>{    
+            if(error)  
+                console.log(error)
+                issue.countDocuments({createdDate:{'$eq':req.query.createdDate}},(error, allIssues)=>{    
+                    if(error)  
+                        console.log(error)
+                        var file = fs.createWriteStream('file.csv', {'flags': 'w+', autoClose: true});
+                                result2 += "Created issues number at " + new Date()+" "+(numOfDocs*100/allIssues) + '\n';
+                                console.log(result2)
+                            file.write(result2);
+                            res.header('Access-Control-Allow-Origin', '*')
+                        res.json(numOfDocs)
                 }) 
    
           }) 
@@ -90,7 +146,12 @@ router.get("/",(req, res) => {
         issue.countDocuments({userstory:req.query.idU,status:req.query.status},(error, numOfDocs)=>{    
             if(error)  
                 console.log(error)
-                res.json(numOfDocs)
+                var file = fs.createWriteStream('file.csv', {'flags': 'w+', autoClose: true});
+                                result2 += "number issues  "+  (numOfDocs) + '\n';
+                                console.log(result2)
+                            file.write(result2);
+                            res.header('Access-Control-Allow-Origin', '*');
+                res.status(200).json(numOfDocs)
         
         })
     }
@@ -99,7 +160,12 @@ router.get("/",(req, res) => {
         issue.countDocuments({project:req.query.idP,status:req.query.status},(error, numOfDocs)=>{    
             if(error)  
                 console.log(error)
-        res.json(numOfDocs)
+                var file = fs.createWriteStream('file.csv', {'flags': 'w+', autoClose: true});
+                                result2 += "number issues  " + (numOfDocs) + '\n';
+                                console.log(result2)
+                            file.write(result2);
+                            res.header('Access-Control-Allow-Origin', '*');
+        res.status(200).json(numOfDocs)
         
         })
     }
@@ -108,7 +174,12 @@ router.get("/",(req, res) => {
     issue.countDocuments({release:req.query.idR,status:req.query.status},(error, numOfDocs)=>{    
         if(error)  
             console.log(error)
-            res.json(numOfDocs)
+            var file = fs.createWriteStream('file.csv', {'flags': 'w+', autoClose: true});
+                                result2 += "number issues  " + (numOfDocs) + '\n';
+                                console.log(result2)
+                            file.write(result2);
+                            res.header('Access-Control-Allow-Origin', '*');
+            res.status(200).json(numOfDocs)
     
     }) }
     /*****************Get issues by status **** */
@@ -116,7 +187,12 @@ router.get("/",(req, res) => {
         issue.countDocuments({status:req.query.status},(error, numOfDocs)=>{    
             if(error)  
                 console.log(error)
-                res.json(numOfDocs)
+                var file = fs.createWriteStream('file.csv', {'flags': 'w+', autoClose: true});
+                                result2 += "number of all issues  " + (numOfDocs) + '\n';
+                                console.log(result2)
+                            file.write(result2);
+                            res.header('Access-Control-Allow-Origin', '*');
+                res.status(200).json(numOfDocs)
         
         })
     }
@@ -160,8 +236,31 @@ router.post('/add/:id', (req,res)=> {
         createdBy:req.params.id,
         userstory:req.body.userstory,
         release:req.body.release,
-        project:req.body.project
+        project:req.body.project,
+        language:req.body.language
     }) 
+    let transporter = nodeMailer.createTransport({ 
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: 'epionemedical711@gmail.com',
+            pass: '22053202'
+        }
+    });
+    let mailOptions = {
+        from: 'epionemedical711@gmail.com', // sender address
+        to: "oumayma.habouri@esprit.tn", // list of receivers
+        subject: "New Issue has been created ", // Subject line
+        text: "", // plain text body
+        html: '<b>New Issue has been created on SCRUM Platform related to a project. please verifiy it.</b>' // html body
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+        });
            i.save()
            res.status(200).json(i)
         })

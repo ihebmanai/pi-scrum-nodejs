@@ -12,44 +12,22 @@ var async=require("async")
 const Nexmo = require('nexmo')
 var app = express()
 var Request = require("request")
-
+const cors = require('cors');
 
 const nexmo = new Nexmo({
     apiKey: "9e005905",
     apiSecret: "rbSgmwmSxqu4Nh9o"
   });
-  var jsonArr = [{
-    "foo": 'bar',
-    "qux": 'moo',
-    "poo": 123,
-    "stux": new Date()
-},
-{
-    "foo": 'bar',
-    "qux": 'moo',
-    "poo": 345,
-    "stux": new Date()
-}];
-
-app.use(json2xls.middleware);
-var fs = require('fs');
-router.get('/toExcel',function(req, res) {
-    console.log("aaaaaa")
-var file = fs.createWriteStream('file.csv', {'flags': 'w', autoClose: true});
-var result = '';
-for (var hashkey in jsonArr) {
-    console.log("aaaaaa")
-    result += hashkey + ';' + jsonArr[hashkey].foo + ';' + jsonArr[hashkey].qux + '\n';
-    console.log(result)
-}
-    result += hashkey + ';' + jsonArr[hashkey].foo + ';' + jsonArr[hashkey].qux + '\n';
-file.write(result); 
-res.status(200).json("ok")
-});
+ 
 app.listen(port2)
+app.use(function(req, res, next) {
+    console.log('options');
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "*");
+    next(); 
+  });
 var nodeMailer = require('nodemailer');
     var bodyParser = require('body-parser');
-    var app = express();
     app.set('view engine', 'ejs');
     app.use(express.static('public'));
     app.use(bodyParser.urlencoded({extended: true}));
@@ -112,28 +90,31 @@ router.get("/:id",(req,res)=>{
             if(!project){
                 res.status(404).json('Project not found!')
             }
-            res.json(project)
+            res.status(200).json(project)
         })
     })
     //add project
 router.post('/add/:idP', (req,res)=> {
+    console.log("aaaaaaaaaaaaaaa")
     p  = new project ({
         projectName : req.body.projectName,
         description : req.body.description,
-        startingDate : req.body.startingDate,
-        endDate : req.body.endDate,
+        key:req.body.key,
+      /*  startingDate : req.body.startingDate,
+        endDate : req.body.endDate, */
         status:req.body.status,
-        description : req.body.description,
         productOwner : req.params.idP,
         scrumMaster: req.body.scrumMaster,
-        releases:req.body.releases
+      /*  releases:req.body.releases */
     });
-    if(p.scrumMaster===undefined)
-    { 
+    console.log(p.projectName)
+  /*  if(p.scrumMaster===undefined)
+    {  res.header('Access-Control-Allow-Origin', '*')
         res.status(401).json('plz verify scrum master infos')
+        console.log("erreur sc")
         return
     }
-    else{
+    else{ */
         var tel='';
         console.log("scrummm"+p.scrumMaster)
         user.findById(p.scrumMaster, (err, u) => {
@@ -146,6 +127,8 @@ router.post('/add/:idP', (req,res)=> {
             (err, responseData) => {if (responseData) {console.log(responseData)}}
           )
         })
+        console.log(p)
+        res.header('Access-Control-Allow-Origin','*')
         res.status(201).json(p)
         p.save()
         Request.post({
@@ -162,7 +145,7 @@ router.post('/add/:idP', (req,res)=> {
                 return console.dir(error);
             }
             console.dir(JSON.parse(body));
-        });
+        }); 
         let transporter = nodeMailer.createTransport({ 
             host: 'smtp.gmail.com',
             port: 465,
@@ -188,24 +171,19 @@ router.post('/add/:idP', (req,res)=> {
         
 
         
-    }
-   
+  // }
+    
  
 });
 //update project
 router.put("/update/:id",(req,res) => {
     project.findById(req.params.id, (err, project) => {
-        if(!req.body.content) {
-            return res.status(400).send({
-                message: "project content can not be empty"
-            });
-        }
         if(err){
             console.log(err);
             return;
         }
         else{
-        if(req.body.projectName) roject.projectName = req.body.projectName
+        if(req.body.projectName) project.projectName = req.body.projectName
         if(req.body.description) project.description = req.body.description
         if(req.body.startingDate) project.startingDate = req.body.startingDate
         if(req.body.endDate) project.endDate = req.body.endDate

@@ -21,6 +21,10 @@ var issueSchema = mongoose.Schema({
     description:{
         type:String
     },
+    language:{
+        type:String
+        
+    },
     priority:{
         type:Number
     },
