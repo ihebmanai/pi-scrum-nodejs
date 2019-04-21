@@ -12,14 +12,30 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
+  router.put('/delete/:idB/:idU',(req,res)=>{
+    let query= {"_id":req.params.idB}
+    var ObjectId = require('mongoose').Types.ObjectId;
+                backlog_projet.updateOne( 
+                    { _id: query },
+                    { $pull: { userstories : { _id : new ObjectId(req.params.idU.toString()) } } },
+                    { safe: true },
+                    function removeConnectionsCB(err, obj) {
+                        res.header('Access-Control-Allow-Origin', '*')
+                        res.status(200).json('backlog not found!')
+                    });
+            })
+           
+        
 router.get("/getProject/:id",(req,res)=>{
     backlog_projet.findById(req.params.id, (err, backlog_projet ) => {
         if(!backlog_projet ){
+            res.header('Access-Control-Allow-Origin', '*');
             res.status(404).json('backlog not found!')
         }
        else{
         project.findById(backlog_projet.project, (err, project ) => {
             if(!project ){
+                res.header('Access-Control-Allow-Origin', '*');
                 res.status(404).json('project not found!')
             }
             res.header('Access-Control-Allow-Origin', '*');
@@ -28,6 +44,20 @@ router.get("/getProject/:id",(req,res)=>{
        }
     })
 })
+router.put("/updateUserStory/:idB/:idU",(req,res)=>{
+    let query= {"_id":req.params.idB}
+    var ObjectId = require('mongoose').Types.ObjectId;
+                backlog_projet.updateOne( 
+                    {_id: query, userstories: { $elemMatch: { _id: new ObjectId(req.params.idU.toString())  } }
+                    },
+                    { $set: { "userstories.$.priority": req.body.priority,"userstories.$.timeestimation": req.body.timeestimation } },
+                    function removeConnectionsCB(err, obj) {
+                        res.header('Access-Control-Allow-Origin', '*')
+                        res.status(200).json('updated!')
+                    });
+            })
+        
+    
 router.get("/userstories/:id",(req,res)=>{
     backlog_projet.findById(req.params.id, (err, backlog_projet ) => {
         if(!backlog_projet ){
