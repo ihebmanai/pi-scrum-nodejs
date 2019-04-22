@@ -5,6 +5,7 @@ var project = require('../models/project');
 var backlog_projet=require('../models/backlog_projet')
 var issue = require('../models/issue')
 var json2xls = require('json2xls')
+var Request = require("request")
 const cors = require('cors');
 var app = express()
 app.use(cors());
@@ -225,20 +226,34 @@ router.get("/project/:id",(req,res)=>{
     })
 })
 router.post('/add/:id', (req,res)=> {
-    i  = new issue ({
-        title : req.body.title,
-        type:req.body.type,
-        createdDate : req.body.createdDate,
-        solvedDate : req.body.solvedDate,
-        description : req.body.description,
-        priority : req.body.priority,
-        status: req.body.status,
-        createdBy:req.params.id,
-        userstory:req.body.userstory,
-        release:req.body.release,
-        project:req.body.project,
-        language:req.body.language
-    }) 
+    var p=0
+
+    Request.get({
+        "headers": { "content-type": "application/json" },
+        "url": "http://127.0.0.1:5000/",
+        
+    }, (error, response, body) => {
+        if(error) {
+            return console.dir(error);
+        }
+        i  = new issue ({
+            title : req.body.title,
+            type:req.body.type,
+            createdDate : req.body.createdDate,
+            solvedDate : req.body.solvedDate,
+            description : req.body.description,
+            priority:response.body,
+            status: req.body.status,
+            createdBy:req.params.id,
+            userstory:req.body.userstory,
+            release:req.body.release,
+            project:req.body.project,
+            language:req.body.language
+        }) 
+        i.save()
+        res.status(200).json(i)
+        console.log(response.body)
+    })
     let transporter = nodeMailer.createTransport({ 
         host: 'smtp.gmail.com',
         port: 465,
@@ -261,7 +276,6 @@ router.post('/add/:id', (req,res)=> {
             return console.log(error);
         }
         });
-           i.save()
-           res.status(200).json(i)
+          
         })
 module.exports = router;

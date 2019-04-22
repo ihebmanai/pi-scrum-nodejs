@@ -50,7 +50,7 @@ router.put("/updateUserStory/:idB/:idU",(req,res)=>{
                 backlog_projet.updateOne( 
                     {_id: query, userstories: { $elemMatch: { _id: new ObjectId(req.params.idU.toString())  } }
                     },
-                    { $set: { "userstories.$.priority": req.body.priority,"userstories.$.timeestimation": req.body.timeestimation } },
+                    { $set: { "userstories.$.priority": req.body.priority } },
                     function removeConnectionsCB(err, obj) {
                         res.header('Access-Control-Allow-Origin', '*')
                         res.status(200).json('updated!')

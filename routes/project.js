@@ -52,6 +52,7 @@ router.get("/",(req, res) => {
         project.find({}, (err, projects) => {
             if(!projects)
             res.status(404).json('no projects found')
+           
             res.json(projects)
         })  
     })
