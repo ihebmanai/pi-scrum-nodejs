@@ -21,7 +21,7 @@ app.use(function(req, res, next) {
                     { safe: true },
                     function removeConnectionsCB(err, obj) {
                         res.header('Access-Control-Allow-Origin', '*')
-                        res.status(200).json('backlog not found!')
+                        res.status(200).json('deleted!')
                     });
             })
            

@@ -12,6 +12,15 @@ router.get("/:id",(req,res)=>{
         res.json(release)
     })
 })
+router.get("/",(req,res)=>{
+    release.find({}, (err, releases ) => {
+        if(!releases ){
+            res.status(404).json('release not found!')
+        }
+        res.json(releases)
+    })
+})
+
 router.post('/addRelease/:id', (req,res)=> {
     r  = new release ({
         goals : req.body.goals,

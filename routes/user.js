@@ -10,6 +10,14 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     next(); 
   });
+  router.get("/:idU",(req,res)=>{
+    user.findById(req.params.idU, (err, user) => {
+        if(!user){
+            res.status(404).json('User not found!')
+        }
+        res.status(200).json(user)
+    })
+})
 router.get("/",(req, res) => {
     user.find({}, (err, users) => {
         if(!users)
