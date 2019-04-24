@@ -85,6 +85,20 @@ router.get("/",(req, res) => {
        
     })
 })
+router.get("/statistic",(req, res) => {
+        project.countDocuments({status:req.query.status},(error, numOfDocs)=>{    
+            if(error)  
+                console.log(error)
+              /*  var file = fs.createWriteStream('file.csv', {'flags': 'w+', autoClose: true});
+                                result2 += "number issues  "+  (numOfDocs) + '\n';
+                                console.log(result2)
+                            file.write(result2); */
+                            res.header('Access-Control-Allow-Origin', '*');
+                res.status(200).json(numOfDocs)
+        
+        })
+    
+})
 //get project by id
 router.get("/:id",(req,res)=>{
         project.findById(req.params.id, (err, project) => {
