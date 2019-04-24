@@ -227,10 +227,9 @@ router.get("/project/:id",(req,res)=>{
 })
 router.post('/add/:id', (req,res)=> {
     var p=0
-
     Request.get({
         "headers": { "content-type": "application/json" },
-        "url": "http://127.0.0.1:5000/",
+        "url": "http://127.0.0.1:5000/predict?ch="+req.query.ch,
         
     }, (error, response, body) => {
         if(error) {
