@@ -1,11 +1,10 @@
 var mongoose = require('mongoose')
-var question = require('./question')
-var user=require('./user')
+var Schema=mongoose.Schema;
 var userschema = mongoose.Schema({
     contenu:String,
-    valeur:boolean,
-    question:question,
-    user:user
+    valeur:Boolean,
+    question:{type:Schema.Types.ObjectId,ref:'question'},
+    user:{type:Schema.Types.ObjectId,ref:'user'},
 })
-var reponse =mongoose.model('question',userschema,'reponse');
-module.exports=evaluation;
+var reponse =mongoose.model('reponse',userschema,'reponse');
+module.exports=reponse;

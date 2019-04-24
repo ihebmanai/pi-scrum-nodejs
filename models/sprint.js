@@ -1,9 +1,11 @@
 var mongoose = require('mongoose')
+var projets = require('../models/project')
+
 var userschema = mongoose.Schema({
     name:String,
     type:{enum:['JAVA','NODEJS']},
     delai:Date,
-    project:project
+    project:projets
 
 
 
@@ -11,5 +13,5 @@ var userschema = mongoose.Schema({
 
 
 })
-var sprint =mongoose.model('sprint',userschema,sprint);
+var sprint =mongoose.model('sprint',userschema,'sprint');
 module.exports=sprint;
