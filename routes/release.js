@@ -23,6 +23,7 @@ router.get("/",(req,res)=>{
 
 router.post('/addRelease/:id', (req,res)=> {
     r  = new release ({
+        title:req.body.title,
         goals : req.body.goals,
         status : req.body.status,
         startingDate : req.body.startingDate,

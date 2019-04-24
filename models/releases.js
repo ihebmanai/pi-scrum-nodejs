@@ -3,11 +3,15 @@ var project=require('./project')
 var sprint=require('./sprint')
 var Schema=mongoose.Schema;
 var userStory = mongoose.Schema({
+    _id:String,
     userStory:String,
     priority:Number,
     timeestimation:Number
     });
 var releaseschema = mongoose.Schema({
+    title:{
+        type:String
+    },
 goals:{
     type:String
 },
