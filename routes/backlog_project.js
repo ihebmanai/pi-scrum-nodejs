@@ -7,6 +7,7 @@ var project_userstories=require('../models/project_userstories')
 const cors = require('cors');
 var app = express()
 
+var Request = require("request")
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -56,8 +57,52 @@ router.put("/updateUserStory/:idB/:idU",(req,res)=>{
                         res.status(200).json('updated!')
                     });
             })
-        
+router.put("/addUserStory/:idB",(req,res)=>{
+    var us=[]
     
+    c=new project_userstories({
+        
+         userStory : req.body.userStory,
+         priority : req.body.priority,
+         timeestimation : req.body.timeestimation
+     })
+    b=new project_userstories({
+    })
+    Request.get({
+        "headers": { "content-type": "application/json" },
+        "url": "http://localhost:3000/backlogProject/getB/"+req.params.idB
+       
+    }, (error, response, body) => {
+        if(error) {
+           console.log(error)
+        }
+       
+        b=response.body
+        var obj = JSON.parse(b)
+        us=obj.userstories
+        us.push(c)
+        console.log("aaaaaaaaaaa")
+        console.log(us)
+       
+        backlog_projet.updateOne( 
+            {_id: req.params.idB},
+            { $set: { "userstories": us } },
+            function removeConnectionsCB(err, obj) {
+               
+            });      
+        
+        res.status(200).json("ok")
+    }); 
+                        })
+        
+router.get("/getB/:id",(req,res)=>{
+    backlog_projet.findById(req.params.id, (err, backlog_projet ) => {
+        if(!backlog_projet ){
+        res.status(404).json('backlog not found!')
+        }                             
+        res.status(200).json(backlog_projet)                    
+        })
+ })
 router.get("/userstories/:id",(req,res)=>{
     backlog_projet.findById(req.params.id, (err, backlog_projet ) => {
         if(!backlog_projet ){
@@ -65,6 +110,16 @@ router.get("/userstories/:id",(req,res)=>{
         }
         
         res.status(200).json(backlog_projet.userstories)
+     
+    })
+})
+router.get("/userstories/:id",(req,res)=>{
+    backlog_projet.findById(req.params.id, (err, backlog_projet ) => {
+        if(!backlog_projet ){
+            res.status(404).json('backlog not found!')
+        }
+        
+        res.status(200).json(backlog_projet)
      
     })
 })
