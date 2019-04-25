@@ -42,7 +42,7 @@ router.get('/refuseDemand/:id', (req, res) => {
 
 router.get('/dispalyMydemand/:id', (req, res) => {
 	formationModels
-		.find({ user: req.params.id })
+		.find()
 		.then((data) => {
 			res.json(data);
 		})
@@ -67,7 +67,7 @@ function mailsend(subject, contenu, attachments) {
 		text: contenu,
 		attachments: [
 			{
-				path: path.basename(attachments)
+				path: path.basename('C:\\Users\\ASUS\\Desktop\\kasandra.txt')
 			}
 		]
 	};

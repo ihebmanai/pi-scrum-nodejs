@@ -9,7 +9,6 @@ var notification = require('../models/notifications');
 var path = require('path');
 var brain = require('brain.js');
 const serializer = require('./serializer');
-var trainData = require('./test');
 var user = require('../models/user');
 
 router.post('/addTask/:id', (req, res) => {
@@ -24,8 +23,8 @@ router.post('/addTask/:id', (req, res) => {
 	});
 	console.log('ooo');
 });
-router.get('/delete/:id', (req, res) => {
-	userStory.findByIdAndRemove(req.params.id).then((res) => console.log(res));
+router.get('/delete/:id', async (req, res) => {
+	await userStory.findByIdAndRemove(req.params.id).then((res) => console.log(res));
 	res.json('ok');
 });
 router.get('/getall', (req, res) => {
@@ -33,17 +32,17 @@ router.get('/getall', (req, res) => {
 		res.json(data);
 	});
 });
-router.post('/addStory/:id', (req, res) => {
+router.post('/addStory/:id', async (req, res) => {
 	story = new userStory();
 
 	story = req.body;
 	story.backlogTask = req.params.id;
 	story.state = 'to do';
 	console.log(story);
-	userStory.insertMany(story).then((data) => {
+	await userStory.insertMany(story).then((data) => {
 		res.json(data);
 	});
-	updateTask(req.params.id);
+	await updateTask(req.params.id);
 
 	//ps: l estimation est la somme de user sotry , la complexité est la moy de complexxité .
 });
@@ -183,12 +182,6 @@ router.get('/lanchvote', (req, res) => {
 	res.json(notif);
 });
 
-router.get('/lanchvote', (req, res) => {
-	notif = new notification({ date: new Date(), contenu: 'the vote has started go make your wish list' });
-	notification.insertMany({ date: new Date(), contenu: 'the vote has started go make your wish list', to: 'all' });
-	mailsend('Vote has started', 'the vote has started go make your wish list');
-	res.json(notif);
-});
 router.get('/avg', (req, res) => {
 	userStory.aggregate(
 		[
@@ -222,6 +215,20 @@ router.get('/user/:id', (req, res) => {
 
 router.post('/predict', (req, res) => {
 	const net = new brain.NeuralNetwork();
+	trainData = [
+		{
+			input: 'html java api login interface ',
+			output: { time: 0.1, complexite: 0.5 }
+		},
+		{
+			input: 'react interface ux/ui',
+			output: { time: 1, complexite: 0.5 }
+		},
+		{
+			input: 'java react interface login register',
+			output: { time: 0.5, complexite: 0.5 }
+		}
+	];
 	net.train(serializer.serialize(trainData), { log: true });
 
 	const output = net.run(serializer.encode(req.body.desc));
@@ -256,9 +263,7 @@ router.post('/rec', (req, res) => {
 		})
 		.catch(() => res.json({ _id: null, name: 'no one ' }));
 });
-cron.schedule('* * * * *', () => {
-	console.log('running a task every minute');
-});
+
 var transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
@@ -292,16 +297,18 @@ async function updateTask(id) {
 	console.log(id);
 	var moy = 0;
 	var complexite = 0;
-	await userStory.find({ backlogTask: '5ca4bf9677a94905acd0b451' }, function(error, result) {
-		result.forEach(function(value) {
+	await userStory.find({ backlogTask: id }, async function(error, result) {
+		await result.forEach(function(value) {
 			complexite = value.complexite + complexite;
 			moy = value.estimation + moy;
+			console.log(value);
 		});
-		backlog.findByIdAndUpdate(
-			'5ca4bf9677a94905acd0b451',
-			{ complexite: complexite / (result.length + 1), estimation: moy },
-			function(err, backlog) {}
-		);
+		await backlog.findByIdAndUpdate(id, { complexite: complexite / (result.length + 1), estimation: moy }, function(
+			err,
+			backlog
+		) {
+			console.log(backlog);
+		});
 	});
 }
 async function votevalidation() {
