@@ -3,7 +3,6 @@ var userschema = mongoose.Schema({
     name:String,
     type:{enum:['JAVA','NODEJS']},
     delai:Date,
-    project:project
 
 
 

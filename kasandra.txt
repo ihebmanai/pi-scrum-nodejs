@@ -1,0 +1,10 @@
+keyspace == DB
+similaire a SQL 
+com node1 -- => with token we can select where our data are insered par intervalle ; 
+pour connaitre les donné repliqué dans quelle noeuds--> com node1 nodetool get 
+colum est recomandé consitance 
+any haut disponibilité (availibility) 
+constency all pour tester si tout les noeuds son en marche 
+no host 
+c:/users/asus/ccm/moncluster/node1/hit 
+

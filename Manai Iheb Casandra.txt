@@ -1,0 +1,18 @@
+1 -CREATE KEYSPACE movies
+  WITH REPLICATION = { 
+   'class' : 'SimpleStrategy', 
+   'replication_factor' : 1 
+  };
+2-use movies
+3-CREATE TABLE artiste(
+  id integer,
+  lastname varchar,
+  birthdate timestamp,
+  gendre varchar
+  PRIMARY KEY (id)
+)
+4-INSERT INTO artise  (id,lastname,birthdate,genre) VALUES (1, 'iheb',1946,'male');
+4-INSERT INTO artise  (id,lastname,birthdate) VALUES (2, 'iheb',1946,'male');
+4-INSERT INTO artise  (id,lastname,birthdate) VALUES (3, 'iheb',1946,'male');
+5-ALTER TABLE  ariste add telephone Type set<int>
+

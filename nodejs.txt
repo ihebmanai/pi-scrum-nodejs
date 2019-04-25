@@ -1,0 +1,38 @@
+add task **
+add task descritpion with details** 
+dispaly task details** 
+vote tasks**
+display tasks that i have voted**
+send notifiaction / mail vote start **
+send mail for your tasks  
+add formations***
+send mail with attachments certificats 
+end notification for the manager 
+the manager confirme 
+done to do doing 
+percent 
+cron send mail 
+
+
+
+
+---------
+AVGcomplexite for voted tasks == AVGComplexité for all tasks
+
+SumEstimation / nbr dev Team = Sum Estimation for voted tasks 
+
+fil vote ki yabda yvoti yabda yaincrimenti el temps w complexite hata l yousel el avg w sum maadech ynajem yzid 
+
+el scurm master ychouf les tasks el ma3andhom 7ad w ely mazelou makamlouch les taches mte3hom w yzidhom 
+si yheb yzid el we7id fet el avg w sum ynajem yzidou 
+
+
+**************** scrumm master get a notification when a backlog is added 
+
+
+
+
+
+
+
+
