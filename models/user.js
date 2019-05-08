@@ -1,5 +1,6 @@
 var mongoose=require('mongoose');
-
+var sprint = require('./sprint')
+var Schema=mongoose.Schema;
 var userSchema = mongoose.Schema({
 firstName:{
     type: String,
@@ -33,7 +34,20 @@ telephone:{
 },
 image:{
     type:String
-}
+},
+sprint:[
+  {type:Schema.Types.ObjectId,ref:'sprint'}
+],
+meetings:[
+  {type:Schema.Types.ObjectId,ref:'meetings'}
+],
+userStories:[
+{type:Schema.Types.ObjectId,ref:'UserStory'}
+],
+rates:[
+{type:Schema.Types.ObjectId,ref:'rate'}
+]
+
 });
 var User=mongoose.model('User',userSchema,'User');
 module.exports=User;

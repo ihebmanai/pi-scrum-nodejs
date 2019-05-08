@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 bcrypt   = require('bcrypt-nodejs');
+var socket = require('socket.io');
+// Import the library:
+var cors = require('cors');
+const Pusher = require('pusher');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -29,9 +33,13 @@ var userstoryProjRouter=require('./routes/userStory_backlogP')
 var notificationRouter=require('./routes/notification')
 
 
+var userStoryRouter = require('./routes/userStory')
+var evaluationTechRouter = require('./routes/evaluatuin_tech')
+var sprintRouter = require('./routes/sprint')
+var interviewRouter = require('./routes/interview')
+var etatRouter = require('./routes/etat')
 
-
-
+var rateRouter = require('./routes/rate')
 
 
 var mongoose= require('mongoose');
@@ -68,15 +76,52 @@ app.use('/user', usersList);
 app.use('/project', projectRouter);
 app.use('/backlogProject', backlogProjectRouter);
 app.use('/release', releaseRouter);
+
+app.use('/backlog_sprint',backlogSprintRouter);
+app.use('/sprint',sprintRouter);
 app.use('/issue', issueRouter);
 app.use('/meetings', meetingsRouter);
+
+app.use('/userStory', userStoryRouter);
 app.use('/userStoryP', userstoryProjRouter);
 app.use('/notification', notificationRouter);
+app.use('/interview',interviewRouter);
+app.use('/etat',etatRouter);
+app.use('/rate',rateRouter);
+
+app.use('/meetings', meetingsRouter);
+app.use('/discussion', discussionRouter);
+app.use('/question', questionRouter);
+app.use('/exams', examRouter);
+app.use('/reponses', reponseRouter);
+app.use('/evaluations', evaluationTechRouter);
+app.use('/messages', messageRouter);
+app.use('/cv', cvManagmentRouter);
 
 
 
+// Static files
+app.use(express.static('public'));
+
+// Provide access to node_modules folder from the client-side
+app.use('/scripts', express.static(`${__dirname}/node_modules/`));
 
 
+// Redirect all traffic to index.html
+app.use((req, res) => res.sendFile(`${__dirname}/public/index.html`));
+
+
+var pusher = new Pusher({
+  appId: '767754',
+  key: 'dc228fe9baaec0233807',
+  secret: 'b9e9b31d13212baa5763',
+  cluster: 'eu',
+  encrypted: true
+});
+
+pusher.trigger('my-channel', 'my-event', {
+  "message": "hello world"
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

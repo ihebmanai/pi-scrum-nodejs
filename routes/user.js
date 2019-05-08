@@ -3,29 +3,26 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var user = require('../models/user');
 var jwt = require('jsonwebtoken')
-const cors = require('cors')
-var app = express()
-app.use(function(req, res, next) {
-    console.log('options');
-    res.header("Access-Control-Allow-Origin", "*");
-    next(); 
+
+router.get('/login', function(req, res, next) {
+    res.render('user/login.twig');
   });
-  router.get("/:idU",(req,res)=>{
-    user.findById(req.params.idU, (err, user) => {
-        if(!user){
-            res.status(404).json('User not found!')
-        }
-        res.status(200).json(user)
-    })
-})
-router.get("/",(req, res) => {
-    user.find({}, (err, users) => {
-        if(!users)
-        res.status(404).json('no projects found')
-        res.header("Access-Control-Allow-Origin", "*");
-        res.status(200).json(users)
-    })  
-})
+
+
+  router.get('/', function(req, res, next) {
+    user.find()
+        .then((data)=>{
+           // res.setHeader("Access-Control-Allow-Origin", "*"),
+           // res.statusCode=200,
+            //res.contentType('application/json'),
+            res.json(data)
+        })
+        .catch((err)=> {
+            console.log('erreur');
+        })
+    });
+
+
 router.post('/login', (req,res)=> {
     
   //  user.insertMany({firstName:"ddddd"});
@@ -51,22 +48,29 @@ router.post('/login', (req,res)=> {
                 else{
                     res.status(401).json('Unauthorised')
                 }
-                
-               //console.log(user)
-             }
+              }
                     
             })
 
-   // console.log('password'+req.body.password)
+  
    
 });
 
+router.get('/register', function(req, res, next) {
+    res.render('user/register.twig');
+  });
+
 router.post('/register',function(req,res){
-     u  = new user ({
+     u  = new user({
         firstname : req.body.firstname,
         lastname : req.body.lastname,
         password : bcrypt.hashSync(req.body.password,bcrypt.genSaltSync(10)),
-        email : req.body.email
+        email : req.body.email,
+        username : req.body.username,
+        role : req.body.role,
+        telephone : req.body.telephone,
+        image: req.body.image  
+        
     });
     u.save(function(err,user){
         if (err) 
@@ -75,8 +79,24 @@ router.post('/register',function(req,res){
             res.send(user)
     }) 
     console.log(u)
-    //console.log(email)
+  
 })
+
+
+router.get('/:id',function(req,res){
+
+   // var now = new Date()
+    let query = {
+      "_id" : req.params.id
+  }
+  console.log('id'+req.params.id)
+  user.findById(req.params.id,
+    
+    function (err, user) {
+      if (err) return res.send(err)
+      res.send(user);
+  });
+   })
 
 
 

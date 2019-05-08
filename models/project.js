@@ -27,7 +27,9 @@ var projectSchema = mongoose.Schema({
     devTeam:[
         {type:Schema.Types.ObjectId,ref:'User'}
     ],
-    releases:[release]
+    releases:[
+        {type:Schema.Types.ObjectId,ref:'release'}
+    ]
 });
 
 var Project=mongoose.model('Project',projectSchema,"project");
