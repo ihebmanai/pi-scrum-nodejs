@@ -27,7 +27,8 @@ var cvManagmentRouter = require('./routes/cv_managment');
 var mongoose = require('mongoose');
 var usersList = require('./routes/user');
 var projectRouter = require('./routes/project');
-const url = 'mongodb://127.0.0.1:27017/pi-scrum';
+const url = 'mongodb+srv://iheb:iheb@pi-scrum-xq6gs.mongodb.net/test?retryWrites=true';
+
 mongoose.connect(url, { useNewUrlParser: true });
 var mongo = mongoose.connection;
 mongo.on('connected', () => {
