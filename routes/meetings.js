@@ -269,7 +269,7 @@ var transporter = nodemailer.createTransport({
         console.log(meeting)
         const mailOptions = {
           from: 'dhiabsdl94@gmail.com', // sender address
-          to: utilisateur.email, // list of receivers
+          to: "oumayma.habouri@esprit.tn", // list of receivers
           subject: 'Invitation Au meeting '+meeting.title+' prévu le '+meeting.date+' à '+meeting.startDate, // Subject line
           html: '<p> Please check this link to connect to our  </p> <a href="http://localhost:3000"> This is the link to the Chat App of Be softilys </a> <br> *Nb : It so important to be present 5min before th meeting you have to connect with your BeSoftilis username <br> and join room Named :'+meeting.title +' !!! ...  '// plain text body
         };

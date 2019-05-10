@@ -186,9 +186,9 @@ router.get('/inviteexam/:iduser/:idmeeting', function(req, res, next) {
        // console.log(meeting)
         const mailOptions = {
           from: 'dhiabsdl94@gmail.com', // sender address
-          to: utilisateur.email, // list of receivers
+          to: "oumayma.habouri@esprit.tn", // list of receivers
           subject: 'Invitation to evaluation test sended By be softylis : '+ex.title+' '+ex.type+' with duration of  '+ex.duree+' Min', // Subject line
-          html: '<p> Please check this link to begin the exam  </p> <a href="http://localhost:3001/#/begin"> Click here to begin </a> <br> ' // plain text body
+          html: '<p> Please check this link to begin the exam  </p> <a href="http://localhost:3002/#/begin"> Click here to begin </a> <br> ' // plain text body
         };
       
          transporter.sendMail(mailOptions, function (err, info) {
